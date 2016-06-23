@@ -59,14 +59,14 @@ wpcore_install [vhost] [version]
 This installs the passes *version* of Wordpress into the indicated *vhost*. You can also use this as an upgrade to a newer version.
 After copying the files the script will also perform the database upgrade automatically by calling the script on the vhost. Make sure the vhost is resolvable from your webserver as well!
 
-#### wpplugin_fetch [plugin] [version]
+#### wpplugin_fetch
 ```
 wpcore_fetch [plugin] [version]
 ```
 This will fetch the latest version of the plugin from Wordpress.org and name it after the passed *version*. A helper script is needed in the plugin directory (e.g. /var/lib/wp_ops/plugins/[plugin]/fetch.sh) to fetch the specific plugin as not all plugin pages on Wordpress.org follow the same standard. (see also https://xkcd.com/927/)
 Also keep in mind the plugin needs to have the exact same name as it is on disk in the wp-content/plugin directory when installed normally. Otherwise this script will not work!
 
-#### wpplugin_install [vhost] [plugin]
+#### wpplugin_install
 ```
 wpcore_fetch [vhost] [plugin]
 ```
