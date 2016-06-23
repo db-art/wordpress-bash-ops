@@ -46,13 +46,13 @@ In principle keeping your files up to date is done automagically by the cron. Wh
 
 Apart from this there are some executables you can use:
 
-###### wpcore_fetch
+#### wpcore_fetch
 ```
 wpcore_fetch [version]
 ```
 This executable will fetch the latest Wordpress version from Wordpress.org and name it after the passed *version*. This executable is also used by the cron to fetch the latest.
 
-###### wpcore_install
+#### wpcore_install
 ```
 wpcore_install [vhost] [version]
 ```
