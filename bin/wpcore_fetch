@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Wordpress Bash Ops
+# Created by Art van Scheppingen (DB Art) in 2016
+#
+# Check for the latest version here:
+# https://github.com/banpei-dbart/wordpress-bash-ops
+#
+# I created these scripts & tools to make my life easier
+# You are free to reuse or modify these scripts
+
+# This script will download the latest release from Wordpress.org, extract it in the core directory and then move it to the indicated version
+
+source /etc/wp_ops.cfg
+
+if [[ -z "$1"  ]]; then
+  echo "Usage: wpcore_fetch [version]"
+  exit 1
+fi
+
+version="$1"
+
+#Check if core directory exists
+if [ -d "$core_dir/wordpress-$version" ]; then
+   echo "Core directory $core_dir/wordpress-$version already exists!"
+   exit
+fi
+
+#Go to core dir and fetch latest, symlink and do magic
+cd $core_dir
+wget --no-check-certificate https://wordpress.org/latest.tar.gz 1>>$wp_control_log 2>/dev/null
+tar -zxvf latest.tar.gz >> $wp_control_log
+rm latest.tar.gz
+mv wordpress "wordpress-$version"
+ln -s "wordpress-$version" "wordpress-latest"
+
+echo "Fetched latest core of Worpress: $version"
+echo "Fetched latest core of Worpress: $version" >> $wp_control_log

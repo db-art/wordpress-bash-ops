@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Wordpress Bash Ops
+# Created by Art van Scheppingen (DB Art) in 2016
+#
+# Check for the latest version here:
+# https://github.com/banpei-dbart/wordpress-bash-ops
+#
+# I created these scripts & tools to make my life easier
+# You are free to reuse or modify these scripts
+
+# This script scans the docroot_dir for vhosts that have installed wordpress. Then checks every one of them
+# and see if the they all have installed the latest downloaded version of Wordpress.
+
+source /etc/wp_ops.cfg
+
+# See which versions we have downloaded in the core directory, sort them and then take the latest (and greatest)
+latest=`ls -d $core_dir/*/ | grep -v 'latest' | sort | tail -n 1 |cut -d "-" -f 2 | cut -d "/" -f 1`
+
+# Scan through the docroot for Wordpress installations and return a list of version.php files
+vhost_versions=`find $docroot_dir -wholename "*$docroot_append/wp-includes/version.php" | grep -v $core_dir`
+
+for version_file in $vhost_versions; do
+  installed_version=`grep -h 'wp_version =' $version_file | sed -e "s/.*'\([^']*\)';/\1/"`
+  if [ $installed_version !=  $latest ]; then
+    echo "Detected an older version installed in: $version_file ($installed_version)"
+  fi
+done
+

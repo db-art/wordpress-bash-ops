@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Wordpress Bash Ops
+# Created by Art van Scheppingen (DB Art) in 2016
+#
+# Check for the latest version here:
+# https://github.com/banpei-dbart/wordpress-bash-ops
+#
+# I created these scripts & tools to make my life easier
+# You are free to reuse or modify these scripts
+
+# This script will retrieve the latest version number from the Wordpress.org site and then download it via wpcore_fetch
+
+source /etc/wp_ops.cfg
+
+latest=`wpcore_latest`
+versions=`ls -d $core_dir/*/ | cut -d "-" -f 2 | cut -d "/" -f 1`
+
+if [[ $versions != *"$latest"* ]]; then
+  echo "A new version of Wordpress is available: $latest"
+  echo " - Fetching the new version:"
+  wpcore_fetch $latest
+fi

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Wordpress Bash Ops
+# Created by Art van Scheppingen (DB Art) in 2016
+#
+# Check for the latest version here:
+# https://github.com/banpei-dbart/wordpress-bash-ops
+#
+# I created these scripts & tools to make my life easier
+# You are free to reuse or modify these scripts
+
+# All this script does is fetch the release archive from Wordpress.org and extract the latest release from there
+
+wp_release_archive='https://wordpress.org/download/release-archive/'
+
+# This script uses html2text.py from https://github.com/aaronsw/html2text
+html2text.py $wp_release_archive | grep 'VersionDownload' -A 2 | grep -v 'VersionDownload' | grep -v '\-\-' | awk 'NF' | head -n 1
