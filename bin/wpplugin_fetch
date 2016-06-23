@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Wordpress Bash Ops
+# Created by Art van Scheppingen (DB Art) in 2016
+#
+# Check for the latest version here:
+# https://github.com/banpei-dbart/wordpress-bash-ops
+#
+# I created these scripts & tools to make my life easier
+# You are free to reuse or modify these scripts
+
+# This script downloads the latest version from the plugin page on wordpress.org, extract it in the plugin directory and then symlink it to be the latest
+
+source /etc/wp_ops.cfg
+
+if [[ -z "$1" || -z "$2" ]]; then
+  echo "Usage: wpplugin_fetch [plugin] [version]"
+  exit 1
+fi
+
+plugin="$1"
+version="$2"
+
+#Check if plugin directory exists
+if [ ! -d "$plugin_dir$plugin" ]; then
+   echo "Plugin directory $plugin_dir$plugin does not exists!"
+   echo "Verify the plugin directory"
+   exit
+fi
+
+#Go to plugin dir and fetch latest, symlink and do magic
+cd $plugin_dir$plugin
+./fetch.sh $plugin $version
+

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Wordpress Bash Ops
+# Created by Art van Scheppingen (DB Art) in 2016
+#
+# Check for the latest version here:
+# https://github.com/banpei-dbart/wordpress-bash-ops
+#
+# I created these scripts & tools to make my life easier
+# You are free to reuse or modify these scripts
+
+# This script will install the latest version of a plugin under the indicated vhost
+
+source /etc/wp_ops.cfg
+
+if [[ -z "$1" || -z "$2" ]]; then
+  echo "Usage: wpplugin_install [vhost] [plugin]"
+  exit 1
+fi
+
+plugin="$2"
+vhost="$1"
+
+#Check if plugin directory exists
+if [ ! -d "$plugin_dir$plugin" ]; then
+   echo "Plugin directory $plugin_dir$plugin does not exists!"
+   echo "Verify the plugin directory"
+   exit
+fi
+
+#Check if plugin symlink to latest version exists
+if [ ! -L "$plugin_dir$plugin/$plugin" ]; then
+   echo "Symlink $plugin_dir$plugin/$plugin to plugin $plugin does not exists!"
+   echo "Verify the plugin directory and create the symlink to the latest version!"
+   exit
+fi
+
+#Check if destination exists
+docroot_path="$docroot_dir/$vhost$docroot_append"
+if [ ! -e "$docroot_path/$wpplugin_dir" ]; then
+   if [ ! -d "$docroot_path" ]; then
+     echo "Docroot $docroot_path does not exists!"
+   else
+     echo "Plugin directory $docroot_path/$wpplugin_dir does not exists!"
+   fi
+   exit
+fi
+
+echo "installing plugin $plugin for vhost $vhost in $docroot_path"
+cp -RL "$plugin_dir$plugin/$plugin" "$docroot_path/$wpplugin_dir"
+

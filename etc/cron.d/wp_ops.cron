@@ -1,0 +1,4 @@
+MAILTO=<you@domain.com>
+
+# On a daily basis check for the latest version of Wordpress and check the vhosts
+0 0 * * * root /bin/wpcore_check_newversion && /bin/wpcore_check_old_versions

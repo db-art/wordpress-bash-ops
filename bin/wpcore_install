@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Wordpress Bash Ops
+# Created by Art van Scheppingen (DB Art) in 2016
+#
+# Check for the latest version here:
+# https://github.com/banpei-dbart/wordpress-bash-ops
+#
+# I created these scripts & tools to make my life easier
+# You are free to reuse or modify these scripts
+
+# This script will install the specified core version into the indicated vhost
+
+source /etc/wp_control.cfg
+
+wpplugin_dir="wp-content/plugins"
+
+if [[ -z "$1" || -z "$2" ]]; then
+  echo "Usage: wpcore_install [vhost] [core_version]"
+  echo " Core versions available:"
+  for dir in /www/data/wordpress/core/*/
+  do
+    echo $dir | cut -d "-" -f 2 | cut -d "/" -f 1    
+  done
+  exit 1
+fi
+
+host="$1"
+core_version="$2"
+core_path="$core_dir/wordpress-$core_version"
+docroot_path="$docroot_dir/$vhost$docroot_append"
+
+#Check if core directory exists
+if [ ! -d "$core_path" ]; then
+   echo "Core directory $core_path does not exists!"
+   echo "Verify the core directory"
+   exit
+fi
+
+#Check if destination exists
+if [ ! -e "$docroot_path/$wpplugin_dir" ]; then
+   if [ ! -d "$docroot_path" ]; then
+     echo "Docroot $docroot_path does not exists!"
+   else
+     echo "Plugin directory $docroot_path/$wpplugin_dir does not exists!"
+   fi
+   exit
+fi
+
+echo "installing core $core_version for $vhost in $docroot_path"
+cp -R $core_path/* $docroot_path
+
+echo "removing uncessary files from docroot $docroot_path"
+rm -f $docroot_path/readme.html
+rm -f $docroot_path/license.txt
+
+echo "Running upgrade for the database for http://$vhost"
+curl "http://$vhost/wp-admin/upgrade.php?step=1&backto=%2Fwp-admin%2F"
+
